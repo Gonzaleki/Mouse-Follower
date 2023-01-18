@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-function App () {
+const FollowMouse = () => {
   const [enabled, setEnabled] = useState(false)
   // necesitamos guardar la posicion del mouse
   const [position, setPosition] = useState({ x: 0, y: 0 })
@@ -15,10 +15,23 @@ function App () {
     if (enabled) {
       // solo si el enabled es true, si queremos seguir el puntero
       window.addEventListener('pointermove', handleMove)
+      // necesitamos limpiar el efecto sino seguira suscrito siempre
+    }
+
+    // este metodo se ejecutara siempre que se desmonte el componente
+    // que no aparezca mas, no se renderice mas. Ahi entra en uso este metodo.
+    // Si cambia la dependencia tambien ejecuta este metodo para limpiar el efecto anterior antes de
+    // ejecutar el nuevo
+    console.log('useeffect')
+    return () => {
+      console.log('cleanup')
+
+      window.removeEventListener('pointermove', handleMove)
+      // para ver acumulacion de suscripciones usar getEventListeners(window) y nos da un array con la data
     }
   }, [enabled])
   return (
-    <main>
+    <>
       <div style={{
         position: 'absolute',
         backgroundColor: '#09f',
@@ -36,6 +49,14 @@ function App () {
       <button onClick={() => setEnabled(!enabled)}>
         {enabled ? 'Desactivar' : 'Activar'} seguir puntero
       </button>
+    </>
+  )
+}
+
+function App () {
+  return (
+    <main>
+      <FollowMouse />
     </main>
   )
 }
