@@ -30,6 +30,13 @@ const FollowMouse = () => {
       // para ver acumulacion de suscripciones usar getEventListeners(window) y nos da un array con la data
     }
   }, [enabled])
+
+  useEffect(() => {
+    document.body.classList.toggle('no-cursor', enabled)
+    return () => {
+      document.body.classList.remove('no-cursor')
+    }
+  })
   return (
     <>
       <div style={{
